@@ -3,13 +3,17 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
-    using Olive;
 
     class SubscriptionRepository : ISubscriptionRepository
     {
         readonly SubscriptionDbContext Context;
 
         public SubscriptionRepository(SubscriptionDbContext context) => Context = context;
+
+        public Task<Subscription[]> GetAll()
+        {
+            return Context.Subscriptions.ToArrayAsync();
+        }
 
         public Task<Subscription[]> GetAll(string userId)
         {
@@ -48,6 +52,11 @@
         public Task<Subscription[]> GetAllWithTransactionId(string transactionId)
         {
             return Context.Subscriptions.Where(x => x.TransactionId == transactionId).ToArrayAsync();
+        }
+
+        public Task<Subscription[]> GetAllWithPurchaseToken(string purchaseToken)
+        {
+            return Context.Subscriptions.Where(x => x.PurchaseToken == purchaseToken).ToArrayAsync();
         }
     }
 }
